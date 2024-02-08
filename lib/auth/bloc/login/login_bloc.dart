@@ -18,5 +18,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         emit(LoginState(loginStatus: LoginStatus.failure, result: result));
       }
     });
+
+    on<GoogleSingInPressed>((event, emit) async {
+      String result = await AuthenticationData().signInWithGoogle();
+      emit(const LoginState().copyWith());
+
+      if (result == 'Success') {
+        LoginState(loginStatus: LoginStatus.success, result: result);
+      } else {
+        LoginState(loginStatus: LoginStatus.failure, result: result);
+      }
+    });
   }
 }

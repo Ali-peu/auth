@@ -1,5 +1,6 @@
 import 'package:auth/auth/data/authentication_data.dart';
 import 'package:auth/auth/data/firebase_user_settings.dart';
+import 'package:auth/auth/data/validator.dart';
 import 'package:auth/auth/domain/model/user_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -16,15 +17,19 @@ class SignBloc extends Bloc<SignEvent, SignState> {
           userId: 'xxx', // TODO check
 
           email: event.email,
-          phoneNumber: event.phoneNumber,
+          phoneNumber: Validator().clearPhoneNumber(event.phoneNumber),
           name: event.userName);
 
       MyUser myUserFromFirebase =
           await AuthenticationData().signUp(createMyUser, event.password);
       if (myUserFromFirebase != MyUser.empty) {
-        FirebaseUserSettings().createUser(myUserFromFirebase);
-        emit(
-            const SignState(signStatus: SignStatus.success, result: 'Success'));
+        String result =
+            await FirebaseUserSettings().createUser(myUserFromFirebase);
+        if (result == 'Success') {
+          emit(SignState(signStatus: SignStatus.success, result: result));
+        } else {
+          emit(SignState(signStatus: SignStatus.success, result: result));
+        }
       } else {
         emit(SignState(
             signStatus: SignStatus.failure, result: myUserFromFirebase.name));

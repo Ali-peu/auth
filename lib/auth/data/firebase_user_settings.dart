@@ -6,15 +6,14 @@ import 'dart:developer' as dev;
 
 class FirebaseUserSettings {
   final usersCollection = FirebaseFirestore.instance.collection('user');
-  // final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<bool> createUser(MyUser myUser) async {
+  Future<String> createUser(MyUser myUser) async {
     try {
-      await usersCollection.doc(myUser.phoneNumber).set(myUser.toDocument());
-      return true;
+      await usersCollection.doc(myUser.email).set(myUser.toDocument());
+      return "Success";
     } on FirebaseAuthException catch (authException) {
       dev.log(authException.toString());
-      return false;
+      return authException.toString();
     }
   }
 }

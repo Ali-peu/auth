@@ -4,3 +4,4 @@ part of 'sign_or_login_bloc.dart';
 sealed class SignOrLoginEvent {}
 
 class ChangePageEvent extends SignOrLoginEvent {}
+

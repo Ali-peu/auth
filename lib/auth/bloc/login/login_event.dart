@@ -12,3 +12,8 @@ class LoginButtonPressed extends LoginEvent {
   final String password;
   const LoginButtonPressed({required this.email, required this.password});
 }
+
+
+class GoogleSingInPressed extends LoginEvent{
+  
+}

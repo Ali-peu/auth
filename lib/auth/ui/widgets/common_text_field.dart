@@ -47,7 +47,6 @@ class CommontTextField extends StatelessWidget {
         keyboardType: keyboardType,
         focusNode: focusNode,
         onTap: onTap,
-        // inputFormatters: [inputFormatter!],
         textInputAction: TextInputAction.next,
         onChanged: onChanged,
         inputFormatters: inputFormatters,

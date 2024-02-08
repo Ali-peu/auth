@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1064319967640",
+    "project_id": "take-care-mom-firebase",
+    "storage_bucket": "take-care-mom-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064319967640:android:663899aaff226eb6984bed",
+        "android_client_info": {
+          "package_name": "com.example.auth"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeKNOmASnvKNHDsrg5WfkE7hEwz6p_Z8Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

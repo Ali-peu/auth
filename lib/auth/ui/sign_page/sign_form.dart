@@ -47,8 +47,8 @@ class _SignFormState extends State<SignForm> {
                   nameTextField(),
                   phoneNumberTextField(),
                   PasswordTextField(
-                    passwordController: repeatPasswordController,
-                    passwordController,
+                    passwordController: passwordController,
+                    repeatPasswordController,
                     textFieldlname: 'Password',
                     fromPageName: 'Sign',
                   ),
@@ -69,8 +69,7 @@ class _SignFormState extends State<SignForm> {
   ElevatedButton signButton(SignState state, BuildContext context) {
     return ElevatedButton(
         onPressed: () {
-          if (passwordController.text == repeatPasswordController.text &&
-              formKey.currentState!.validate()) {
+          if (formKey.currentState!.validate()) {
             log('Sign in process');
             state.signStatus != SignStatus.loading
                 ? context.read<SignBloc>().add(SignButtonPressed(

@@ -17,14 +17,13 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
-        log('Is it worker');
         if (state.loginStatus == LoginStatus.success) {
-          log('Before pushing to home');
           Routemaster.of(context).push("/home");
         }
         if (state.loginStatus == LoginStatus.failure) {
@@ -35,16 +34,19 @@ class _LoginFormState extends State<LoginForm> {
       child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, state) {
           return Form(
+              key: formKey,
               child: Column(
-            children: [
-              phoneNumberTextField(),
-              PasswordTextField(
-                passwordController: passwordController,
-                textFiedlname: 'Password',
-              ),
-              loginButton(state, context)
-            ],
-          ));
+                children: [
+                  phoneNumberTextField(),
+                  PasswordTextField(
+                    null,
+                    passwordController: passwordController,
+                    textFieldlname: 'Password',
+                    fromPageName: 'Login',
+                  ),
+                  loginButton(state, context)
+                ],
+              ));
         },
       ),
     );
@@ -53,11 +55,13 @@ class _LoginFormState extends State<LoginForm> {
   ElevatedButton loginButton(LoginState state, BuildContext context) {
     return ElevatedButton(
         onPressed: () {
-          state.loginStatus == LoginStatus.loading
-              ? null
-              : context.read<LoginBloc>().add(LoginButtonPressed(
-                  email: emailController.text,
-                  password: passwordController.text));
+          if (formKey.currentState!.validate()) {
+            state.loginStatus == LoginStatus.loading
+                ? null
+                : context.read<LoginBloc>().add(LoginButtonPressed(
+                    email: emailController.text,
+                    password: passwordController.text));
+          }
         },
         child: state.loginStatus == LoginStatus.loading
             ? const Center(
@@ -73,6 +77,12 @@ class _LoginFormState extends State<LoginForm> {
       obscureText: false,
       keyboardType: TextInputType.emailAddress,
       suffixIcon: const Icon(Icons.phone),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Empty';
+        }
+        return null;
+      },
     );
   }
 }

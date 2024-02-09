@@ -47,12 +47,16 @@ class _SignFormState extends State<SignForm> {
                   nameTextField(),
                   phoneNumberTextField(),
                   PasswordTextField(
-                    passwordController: passwordController,
-                    textFiedlname: 'Password',
+                    passwordController: repeatPasswordController,
+                    passwordController,
+                    textFieldlname: 'Password',
+                    fromPageName: 'Sign',
                   ),
                   PasswordTextField(
+                    passwordController,
                     passwordController: repeatPasswordController,
-                    textFiedlname: 'Repeat Password',
+                    textFieldlname: 'Repeat Password',
+                    fromPageName: 'Sign',
                   ),
                   signButton(state, context)
                 ],
@@ -75,9 +79,6 @@ class _SignFormState extends State<SignForm> {
                     password: passwordController.text,
                     email: emailController.text))
                 : null;
-          } else {
-            ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-                const SnackBar(content: Text('The password doesnt equal')));
           }
         },
         child: state.signStatus == SignStatus.loading

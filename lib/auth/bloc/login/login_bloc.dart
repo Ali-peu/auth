@@ -20,13 +20,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     });
 
     on<GoogleSingInPressed>((event, emit) async {
+      emit(const LoginState().copyWith(loginStatus: LoginStatus.loading));
       String result = await AuthenticationData().signInWithGoogle();
-      emit(const LoginState().copyWith());
 
       if (result == 'Success') {
-        LoginState(loginStatus: LoginStatus.success, result: result);
+        emit(LoginState(loginStatus: LoginStatus.success, result: result));
       } else {
-        LoginState(loginStatus: LoginStatus.failure, result: result);
+        emit(LoginState(loginStatus: LoginStatus.failure, result: result));
       }
     });
   }

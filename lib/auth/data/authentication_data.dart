@@ -1,3 +1,4 @@
+import 'package:auth/auth/data/firebase_user_settings.dart';
 import 'package:auth/auth/domain/model/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +57,7 @@ class AuthenticationData {
         );
 
         await _auth.signInWithCredential(credential);
+        
         result = 'Success';
         return result;
       }

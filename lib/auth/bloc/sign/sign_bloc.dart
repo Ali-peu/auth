@@ -9,12 +9,15 @@ part 'sign_event.dart';
 part 'sign_state.dart';
 
 class SignBloc extends Bloc<SignEvent, SignState> {
-  late String email; // TODO Надо более обдуманно это решить
+  // late String email; // TODO Надо более обдуманно это решить
 
   SignBloc() : super(const SignState(signStatus: SignStatus.initial)) {
     on<SignButtonPressed>((event, emit) async {
       emit(const SignState(signStatus: SignStatus.loading));
       MyUser createMyUser = MyUser.empty;
+      String email = event.email.contains('@')
+          ? event.email
+          : 'fake${DateTime.now().hashCode}@fake.com';
       createMyUser = MyUser(
           userId: 'xxx', // TODO check
 

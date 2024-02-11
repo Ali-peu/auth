@@ -9,6 +9,8 @@ part 'sign_event.dart';
 part 'sign_state.dart';
 
 class SignBloc extends Bloc<SignEvent, SignState> {
+  late String email; // TODO Надо более обдуманно это решить
+
   SignBloc() : super(const SignState(signStatus: SignStatus.initial)) {
     on<SignButtonPressed>((event, emit) async {
       emit(const SignState(signStatus: SignStatus.loading));
@@ -16,7 +18,7 @@ class SignBloc extends Bloc<SignEvent, SignState> {
       createMyUser = MyUser(
           userId: 'xxx', // TODO check
 
-          email: event.email,
+          email: email,
           phoneNumber: Validator().clearPhoneNumber(event.phoneNumber),
           name: event.userName);
 

@@ -20,6 +20,21 @@ class Validator {
     return rightNumber;
   }
 
+  bool checkPhoneNumber(String? phoneNumber) {
+    if (phoneNumber == null || phoneNumber.isEmpty) {
+      return false;
+    } else {
+      String number = clearPhoneNumber(phoneNumber);
+      print(number);
+      print(number.length);
+      if (number.length != 11) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
   var maskFormatter = MaskTextInputFormatter(
       mask: '+7 (###) ###-##-##',
       filter: {'#': RegExp(r'[0-9]')},

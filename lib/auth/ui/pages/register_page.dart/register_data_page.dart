@@ -1,24 +1,33 @@
-import 'dart:developer';
-
 import 'package:auth/auth/bloc/sign/sign_bloc.dart';
 import 'package:auth/auth/data/validator.dart';
 import 'package:auth/auth/ui/widgets/common_text_field.dart';
 import 'package:auth/auth/ui/widgets/password_text_field.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:routemaster/routemaster.dart';
 
-class SignForm extends StatefulWidget {
-  const SignForm({Key? key}) : super(key: key);
+class RegisterDataPageProvider extends StatelessWidget {
+  final String email;
+  const RegisterDataPageProvider({required this.email, super.key});
 
   @override
-  State<SignForm> createState() => _SignFormState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => SignBloc(),
+      child: RegisterDataPage(email: email),
+    );
+  }
 }
 
-class _SignFormState extends State<SignForm> {
-  TextEditingController emailController = TextEditingController();
+class RegisterDataPage extends StatefulWidget {
+  final String email;
+  const RegisterDataPage({required this.email, super.key});
 
+  @override
+  State<RegisterDataPage> createState() => _RegisterDataPageState();
+}
+
+class _RegisterDataPageState extends State<RegisterDataPage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -39,28 +48,30 @@ class _SignFormState extends State<SignForm> {
                   ?.showSnackBar(SnackBar(content: Text(state.result)));
             }
           },
-          child: Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  emailTextField(),
-                  nameTextField(),
-                  phoneNumberTextField(),
-                  PasswordTextField(
-                    passwordController: passwordController,
-                    repeatPasswordController,
-                    textFieldlname: 'Password',
-                    fromPageName: 'Sign',
-                  ),
-                  PasswordTextField(
-                    passwordController,
-                    passwordController: repeatPasswordController,
-                    textFieldlname: 'Repeat Password',
-                    fromPageName: 'Sign',
-                  ),
-                  signButton(state, context)
-                ],
-              )),
+          child: Scaffold(
+            body: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    nameTextField(),
+                    // phoneNumberTextField(),
+                    PasswordTextField(
+                      passwordController: passwordController,
+                      repeatPasswordController,
+                      textFieldlname: 'Password',
+                      fromPageName: 'Sign',
+                    ),
+                    PasswordTextField(
+                      passwordController,
+                      passwordController: repeatPasswordController,
+                      textFieldlname: 'Repeat Password',
+                      fromPageName: 'Sign',
+                    ),
+                    signButton(state, context)
+                  ],
+                )),
+          ),
         );
       },
     );
@@ -70,13 +81,13 @@ class _SignFormState extends State<SignForm> {
     return ElevatedButton(
         onPressed: () {
           if (formKey.currentState!.validate()) {
-            log('Sign in process');
             state.signStatus != SignStatus.loading
                 ? context.read<SignBloc>().add(SignButtonPressed(
-                    userName: nameController.text,
-                    phoneNumber: phoneNumberController.text,
-                    password: passwordController.text,
-                    email: emailController.text))
+                      userName: nameController.text,
+                      phoneNumber: phoneNumberController.text,
+                      password: passwordController.text,
+                      email: widget.email,
+                    ))
                 : null;
           }
         },
@@ -94,22 +105,6 @@ class _SignFormState extends State<SignForm> {
       obscureText: false,
       keyboardType: TextInputType.name,
       prefixIcon: const Icon(Icons.person),
-      validator: (val) {
-        if (val!.isEmpty) {
-          return 'Empty';
-        }
-        return null;
-      },
-    );
-  }
-
-  CommontTextField emailTextField() {
-    return CommontTextField(
-      controller: emailController,
-      hintText: 'Email',
-      obscureText: false,
-      keyboardType: TextInputType.emailAddress,
-      prefixIcon: const Icon(Icons.alternate_email),
       validator: (val) {
         if (val!.isEmpty) {
           return 'Empty';

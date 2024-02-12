@@ -25,4 +25,22 @@ class FirebaseUserSettings {
 
     await usersCollection.doc(email).update({'fullName': name});
   }
+  
+  Future<Map<String, dynamic>> getUserInfo() async {
+    String email = FirebaseAuth.instance.currentUser!.email!;
+
+    try {
+      DocumentSnapshot<Map<String, dynamic>> docSnapshot =
+          await usersCollection.doc(email).get();
+
+      return docSnapshot.data()!;
+    } on FirebaseException catch (e) {
+      log(e.toString());
+      print('FirebaseErrors on get ref_key:$e');
+      return {'FirebaseErrors': e};
+    } catch (e) {
+      print('Errors on get ref_key: $e');
+      return {'DartError': e};
+    }
+  }
 }

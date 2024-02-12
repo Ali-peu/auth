@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:auth/auth/data/authentication_data.dart';
+import 'package:auth/auth/data/firebase_user_settings.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -15,6 +16,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginButtonPressed>((event, emit) async {
       await _loginButtonPressed(emit, event);
     });
+    on<CheckThisIsNewUser>(
+        (event, emit) async => await _checkThisIsNewUser(emit));
 
     on<ChangeLoginType>((event, emit) => _onChangeLoginType(event, emit));
     on<LoginWithEmail>((event, emit) => _onLoginWithEmail(event, emit));
@@ -26,12 +29,28 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     });
   }
 
+  Future<void> _checkThisIsNewUser(Emitter<LoginState> emit) async {
+    Map<String, dynamic> docSnapshot =
+        await FirebaseUserSettings().getUserInfo();
+    String currentUserName = docSnapshot['fullName'];
+    String currentUserEmail = docSnapshot['email'];
+    if (currentUserName.isEmpty) {
+      emit(LoginState(
+          loginStatus: LoginStatus.success,
+          result: currentUserEmail,
+          newUser: true));
+    } else {
+      emit(const LoginState(
+          loginStatus: LoginStatus.success, result: 'Success'));
+    }
+  }
+
   Future<void> _onLoginWithEmail(
       LoginWithEmail event, Emitter<LoginState> emit) async {
     String result =
         await AuthenticationData().login(event.email, event.password);
     if (result == 'Success') {
-      emit(LoginState(loginStatus: LoginStatus.success, result: result));
+      add(CheckThisIsNewUser());
     } else {
       emit(LoginState(loginStatus: LoginStatus.failure, result: result));
     }
@@ -50,7 +69,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     if (result == 'Success' || result.contains('@')) {
       // TODO
-      emit(LoginState(loginStatus: LoginStatus.success, result: result));
+      add(CheckThisIsNewUser());
     } else {
       emit(LoginState(loginStatus: LoginStatus.failure, result: result));
     }

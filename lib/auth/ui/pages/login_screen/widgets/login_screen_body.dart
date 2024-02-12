@@ -27,9 +27,11 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.loginStatus == LoginStatus.success) {
-          // TODO НАдо придумать кака отколибровать нового пользователя
-          // Routemaster.of(context).push('/fill_users_data/${state.result}');
-          Routemaster.of(context).push('/home');
+          if (state.newUser) {
+            Routemaster.of(context).push('/fill_users_data/${state.result}');
+          } else {
+            Routemaster.of(context).push('/home');
+          }
         }
         if (state.loginStatus == LoginStatus.failure) {
           ScaffoldMessenger.maybeOf(context)

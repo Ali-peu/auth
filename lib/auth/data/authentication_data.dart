@@ -50,6 +50,7 @@ class AuthenticationData {
   }
 
   Future<String> signInWithGoogle() async {
+    // TODO Рассмотреть логику
     final GoogleSignIn _googleSignIn = GoogleSignIn();
     final FirebaseAuth _auth = FirebaseAuth.instance;
     String result = 'result';
@@ -70,19 +71,26 @@ class AuthenticationData {
         final GoogleSignInAccount? currentUser = _googleSignIn.currentUser;
 
         await _auth.signInWithCredential(credential);
-
+        Map<String, dynamic> jsonDocument =
+            await FirebaseUserSettings().getUserInfo();
         if (currentUser != null) {
-          MyUser myUser = MyUser.empty;
+          String name = jsonDocument['fullName'];
+          if (name.isEmpty) {
+            MyUser myUser = MyUser.empty;
 
-          myUser = MyUser(
-              userId: googleSignInAuthentication.idToken.toString(),
-              email: currentUser.email,
-              phoneNumber: '',
-              name: '');
-          FirebaseUserSettings().createUser(myUser);
-          return currentUser.email;
+            myUser = MyUser(
+                userId: googleSignInAuthentication.idToken.toString(),
+                email: currentUser.email,
+                phoneNumber: '',
+                name: '');
+
+            FirebaseUserSettings().createUser(myUser);
+            return currentUser.email;
+          } else {
+            return jsonDocument['email'];
+          }
         }
-        result = currentUser?.email ??  'Success'; // TODO 
+        result = currentUser?.email ?? 'Success'; // TODO
         return result;
       }
     } catch (e) {

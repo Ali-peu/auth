@@ -30,3 +30,8 @@ class LoginWithPhoneNumber extends LoginEvent {
 class GoogleSingInPressed extends LoginEvent {}
 
 class ChangeLoginType extends LoginEvent {}
+
+
+class CheckThisIsNewUser extends LoginEvent{
+  
+}

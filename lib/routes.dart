@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auth/auth/ui/pages/sign_page/sign_page.dart';
 import 'package:auth/auth/ui/pages/forgot_password_page/forgot_passsword_page.dart';
 
@@ -10,8 +12,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
 
-final routesWithoutUser = RouteMap(routes: {
-  '/': (_) => const MaterialPage(child: LoginScreen()),
+final routes = RouteMap(routes: {
+  '/': (_) =>  const MaterialPage(child: HomePage()),
+  '/login_page': (_) => const MaterialPage(child: LoginScreen()),
   '/sign_page': (_) => const MaterialPage(child: SignPageProvider()),
   '/forgot_password': (_) =>
       const MaterialPage(child: ForgotPassswordPage()), // TODO
@@ -23,20 +26,6 @@ final routesWithoutUser = RouteMap(routes: {
     return MaterialPage(child: FillUsersDataPage(email: email));
   },
   '/home': (_) => const MaterialPage(child: HomePageProvider()),
-});
-
-final routesWithUser = RouteMap(routes: { // TODO Проверить 
-  '/': (_) => const MaterialPage(child: HomePage()),
-  '/sign_page': (_) => const MaterialPage(child: SignPageProvider()),
-  '/forgot_password': (_) =>
-      const MaterialPage(child: ForgotPassswordPage()), // TODO
-  '/sign_with_user_data': (_) =>
-      const MaterialPage(child: SignWithUserDataPage()),
-  '/fill_users_data/:email': (routeData) {
-    final email = routeData.pathParameters['email'] ?? ' ';
-
-    return MaterialPage(child: FillUsersDataPage(email: email));
-  },
 });
 
 class App extends MaterialApp {
@@ -55,13 +44,8 @@ class App extends MaterialApp {
 App startApp() {
   return App(
     routedDelegate: RoutemasterDelegate(routesBuilder: (context) {
-      final user = FirebaseAuth.instance.currentUser;
-
-      if (user == null) {
-        return routesWithoutUser;
-      } else {
-        return routesWithUser;
-      }
+      log("Its start APP", name: 'Start APP');
+      return routes;
     }),
     routeInformationParser: const RoutemasterParser(),
   );

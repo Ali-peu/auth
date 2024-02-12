@@ -3,6 +3,7 @@ import 'package:auth/auth/ui/widgets/custom_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:routemaster/routemaster.dart';
 
 class HomePageProvider extends StatelessWidget {
   const HomePageProvider({super.key});
@@ -48,10 +49,20 @@ class _HomePageState extends State<HomePage> {
               child: TextButton(
             child: const Text('Log Out'),
             onPressed: () {
-              FirebaseAuth.instance.signOut();
-              setState(() {});
+              setState(() {
+                FirebaseAuth.instance.signOut();
+                Routemaster.of(context).replace('/login_page');
+              });
             },
           )),
+          if (FirebaseAuth.instance.currentUser == null)
+            CustomContainer(
+                child: TextButton(
+              child: const Text('Log In'),
+              onPressed: () {
+                Routemaster.of(context).replace('/login_page');
+              },
+            )),
         ],
       ),
     );

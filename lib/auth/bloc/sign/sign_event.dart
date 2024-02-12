@@ -14,13 +14,17 @@ class SignButtonPressed extends SignEvent {
   const SignButtonPressed({required this.password, required this.signEmail});
 }
 
-class SignWithEmail extends SignButtonPressed {
-  const SignWithEmail({required super.password, required super.signEmail});
+class SignWithEmail extends SignEvent {
+  final String password;
+  final String signEmail;
+  const SignWithEmail({required this.password, required this.signEmail});
 }
 
-class SignWithPhoneNumber extends SignButtonPressed {
-  const SignWithPhoneNumber(
-      {required super.password, required super.signEmail});
+class SignWithPhoneNumber extends SignEvent {
+  // TODO ПОчинить у LoginSEvent
+  final String password;
+  final String signEmail;
+  const SignWithPhoneNumber({required this.password, required this.signEmail});
 }
 
 class FillUserData extends SignEvent {
@@ -30,14 +34,18 @@ class FillUserData extends SignEvent {
   const FillUserData({required this.userSignEmail, required this.updateName});
 }
 
-class FillUserDataWhoSignWithEmail extends FillUserData {
+class FillUserDataWhoSignWithEmail extends SignEvent {
+  final String userSignEmail;
+  final String updateName;
   const FillUserDataWhoSignWithEmail(
-      {required super.userSignEmail, required super.updateName});
+      {required this.userSignEmail, required this.updateName});
 }
 
-class FillUserDataWhoSignWithPhoneNumber extends FillUserData {
+class FillUserDataWhoSignWithPhoneNumber extends SignEvent {
+  final String userSignEmail;
+  final String updateName;
   const FillUserDataWhoSignWithPhoneNumber(
-      {required super.userSignEmail, required super.updateName});
+      {required this.userSignEmail, required this.updateName});
 }
 
 class GoogleSingInPressed extends SignEvent {}

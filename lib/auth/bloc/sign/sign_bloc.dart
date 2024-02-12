@@ -13,7 +13,7 @@ part 'sign_state.dart';
 class SignBloc extends Bloc<SignEvent, SignState> {
   SignBloc() : super(const SignState(signStatus: SignStatus.initial)) {
     on<SignButtonPressed>(
-        (event, emit) async => await _signButonPressed(emit, event));
+        (event, emit) async => await _signButtonPressed(emit, event));
 
     on<SignWithEmail>((event, emit) async => await _signWithEmail(event, emit));
     on<SignWithPhoneNumber>(
@@ -93,9 +93,15 @@ class SignBloc extends Bloc<SignEvent, SignState> {
 
     MyUser myUserFromFirebase =
         await AuthenticationData().signUp(createMyUser, event.password);
+    log(myUserFromFirebase.email, name: 'SignBLOC _signWithEmail email:');
+    log(myUserFromFirebase.userId, name: 'SignBLOC _signWithEmail userId:');
+    log(myUserFromFirebase.phoneNumber, name: 'SignBLOC _signWithEmail phoneNumber:');
+    log(myUserFromFirebase.name, name: 'SignBLOC _signWithEmail name:');
+
+    String result = await FirebaseUserSettings().createUser(myUserFromFirebase);
     if (myUserFromFirebase.userId == 'false') {
-      String result =
-          await FirebaseUserSettings().createUser(myUserFromFirebase);
+      // String result =
+      //     await FirebaseUserSettings().createUser(myUserFromFirebase);
       log(result, name: 'FirebaseUserSettings createUser:');
       if (result == 'Success') {
         emit(SignState(signStatus: SignStatus.success, result: result));
@@ -108,7 +114,7 @@ class SignBloc extends Bloc<SignEvent, SignState> {
     }
   }
 
-  Future<void> _signButonPressed(
+  Future<void> _signButtonPressed(
       Emitter<SignState> emit, SignButtonPressed event) async {
     emit(const SignState(signStatus: SignStatus.loading));
     if (state.signType == SignType.email) {

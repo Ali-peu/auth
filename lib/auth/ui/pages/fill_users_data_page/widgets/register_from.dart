@@ -24,7 +24,7 @@ class _RegisterFromState extends State<RegisterFrom> {
     return BlocListener<SignBloc, SignState>(
       listener: (context, state) {
         if (state.signStatus == SignStatus.success) {
-          Routemaster.of(context).push('home');
+          Routemaster.of(context).push('/home');
         }
       },
       child: BlocBuilder<SignBloc, SignState>(
@@ -56,8 +56,9 @@ class _RegisterFromState extends State<RegisterFrom> {
                                           child: const Text('НЕТ')),
                                       ElevatedButton(
                                           onPressed: () {
-                                            Routemaster.of(context)
-                                                .push('/home');
+                                            Routemaster.of(context).pop();
+                                            Routemaster.of(context).replace(
+                                                '/home'); // TODO Кнопка назад работатет ANdroid
                                           },
                                           child: const Text('ДА'))
                                     ],

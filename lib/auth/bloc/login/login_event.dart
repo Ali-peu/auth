@@ -13,7 +13,14 @@ class LoginButtonPressed extends LoginEvent {
   const LoginButtonPressed({required this.email, required this.password});
 }
 
-
-class GoogleSingInPressed extends LoginEvent{
-  
+class LoginWithEmail extends LoginButtonPressed {
+  const LoginWithEmail({required super.email, required super.password});
 }
+
+class LoginWithPhoneNumber extends LoginButtonPressed {
+  const LoginWithPhoneNumber({required super.email, required super.password});
+}
+
+class GoogleSingInPressed extends LoginEvent {}
+
+class ChangeLoginType extends LoginEvent {}

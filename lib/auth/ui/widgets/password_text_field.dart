@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:auth/auth/ui/widgets/common_text_field.dart';
+import 'package:auth/auth/ui/widgets/custom_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +27,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return CommontTextField(
+    return CustomTextField(
       controller: widget.passwordController,
       hintText: widget.textFieldlname,
       obscureText: obscurePassword,

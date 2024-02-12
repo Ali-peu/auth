@@ -16,4 +16,8 @@ class FirebaseUserSettings {
       return authException.toString();
     }
   }
+
+  Future<void> updateFirebaseUserDocument(String email, String name) async {
+    await usersCollection.doc(email).update({'name': 'name'});
+  }
 }

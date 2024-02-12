@@ -1,12 +1,16 @@
-import 'package:auth/auth/data/firebase_user_settings.dart';
 import 'package:auth/auth/domain/model/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'dart:developer' as dev;
 
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthenticationData {
+  Future<bool> signWithPhoneNumber() async {
+    dev.log('Тут происходит фиктивный процесс регистрации с помощью телефона',
+        name: 'AuthenticationData signWithPhoneNumber: ');
+    return true;
+  }
+
   Future<String> login(String email, String password) async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -27,6 +31,7 @@ class AuthenticationData {
               email: myUser.email, password: password);
 
       signUpUser = myUser.copyWith(userId: user.user!.uid);
+      dev.log(user.user!.uid, name: 'User uid from FIREBASE');
 
       return myUser;
     } on FirebaseAuthException catch (firebaseAuthException) {
@@ -57,7 +62,7 @@ class AuthenticationData {
         );
 
         await _auth.signInWithCredential(credential);
-        
+
         result = 'Success';
         return result;
       }

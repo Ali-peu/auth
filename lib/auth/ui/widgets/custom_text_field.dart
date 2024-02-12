@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class CommontTextField extends StatelessWidget {
+class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final bool obscureText;
@@ -16,7 +16,7 @@ class CommontTextField extends StatelessWidget {
   // final TextInputFormatter? inputFormatter;
   final String? Function(String?)? onChanged;
 
-  const CommontTextField(
+  const CustomTextField(
       {super.key,
       required this.controller,
       required this.hintText,

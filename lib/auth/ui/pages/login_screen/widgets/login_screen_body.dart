@@ -6,6 +6,7 @@ import 'package:auth/auth/ui/widgets/custom_text_field.dart';
 import 'package:auth/auth/ui/widgets/custom_divider.dart';
 import 'package:auth/auth/ui/widgets/password_text_field.dart';
 import 'package:auth/auth/ui/widgets/registration_button_with_platform.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:routemaster/routemaster.dart';
@@ -26,7 +27,9 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.loginStatus == LoginStatus.success) {
-          Routemaster.of(context).push("/home");
+          // TODO НАдо придумать кака отколибровать нового пользователя
+          // Routemaster.of(context).push('/fill_users_data/${state.result}');
+          Routemaster.of(context).push('/home');
         }
         if (state.loginStatus == LoginStatus.failure) {
           ScaffoldMessenger.maybeOf(context)

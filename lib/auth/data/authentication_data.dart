@@ -1,3 +1,4 @@
+import 'package:auth/auth/data/firebase_user_settings.dart';
 import 'package:auth/auth/domain/model/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:developer';
@@ -66,9 +67,22 @@ class AuthenticationData {
           accessToken: googleSignInAuthentication.accessToken,
         );
 
+        final GoogleSignInAccount? currentUser = _googleSignIn.currentUser;
+
         await _auth.signInWithCredential(credential);
 
-        result = 'Success';
+        if (currentUser != null) {
+          MyUser myUser = MyUser.empty;
+
+          myUser = MyUser(
+              userId: googleSignInAuthentication.idToken.toString(),
+              email: currentUser.email,
+              phoneNumber: '',
+              name: '');
+          FirebaseUserSettings().createUser(myUser);
+          return currentUser.email;
+        }
+        result = currentUser?.email ??  'Success'; // TODO 
         return result;
       }
     } catch (e) {

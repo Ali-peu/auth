@@ -40,7 +40,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
         } else if (!RegExp(
                 r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~`)\%\-(_+=;:,.<>/?"[{\]}\|^]).{8,}$')
             .hasMatch(val)) {
-          return 'Не подейдет';
+          return 'Не подойдет';
         }
         if (widget.fromPageName == 'Sign') {
           if (widget.passwordController.text !=

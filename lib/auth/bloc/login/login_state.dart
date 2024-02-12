@@ -14,7 +14,8 @@ class LoginState extends Equatable {
       this.result = '',
       this.loginType = LoginType.email});
 
-  LoginState copyWith({LoginStatus? loginStatus, String? result,LoginType? loginType}) {
+  LoginState copyWith(
+      {LoginStatus? loginStatus, String? result, LoginType? loginType}) {
     return LoginState(
         loginStatus: loginStatus = loginStatus ?? this.loginStatus,
         result: result = result ?? this.result,
@@ -22,5 +23,5 @@ class LoginState extends Equatable {
   }
 
   @override
-  List<Object> get props => [loginStatus, result,loginType];
+  List<Object> get props => [loginStatus, result, loginType];
 }

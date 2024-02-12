@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auth/auth/data/authentication_data.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -8,9 +10,8 @@ part 'login_state.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc()
       : super(const LoginState(
-            loginStatus: LoginStatus.initial,
-            result: '',
-            loginType: LoginType.email)) {
+          loginStatus: LoginStatus.initial,
+        )) {
     on<LoginButtonPressed>((event, emit) async {
       await _loginButtonPressed(emit, event);
     });
@@ -39,6 +40,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Future<void> _onLoginWithPhoneNumber(
       LoginWithPhoneNumber event, Emitter<LoginState> emit) async {
     //TODO
+    log('IS a printed', name: 'LoginBloc _onLoginWithPhoneNumber');
     emit(const LoginState(loginStatus: LoginStatus.success, result: 'Success'));
   }
 
@@ -46,7 +48,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(const LoginState().copyWith(loginStatus: LoginStatus.loading));
     String result = await AuthenticationData().signInWithGoogle();
 
-    if (result == 'Success') {
+    if (result == 'Success' || result.contains('@')) {
+      // TODO
       emit(LoginState(loginStatus: LoginStatus.success, result: result));
     } else {
       emit(LoginState(loginStatus: LoginStatus.failure, result: result));
@@ -55,7 +58,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   Future<void> _loginButtonPressed(
       Emitter<LoginState> emit, LoginButtonPressed event) async {
-    emit(const LoginState(loginStatus: LoginStatus.loading));
+    emit(LoginState(
+        loginStatus: LoginStatus.loading, loginType: state.loginType));
+    log(state.loginType.toString(), name: 'State loginType');
     if (state.loginType == LoginType.email) {
       add(LoginWithEmail(email: event.email, password: event.password));
     } else {
@@ -66,10 +71,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Future<void> _onChangeLoginType(
       ChangeLoginType event, Emitter<LoginState> emit) async {
     if (state.loginType == LoginType.email) {
-      emit(const LoginState().copyWith(loginType: LoginType.phone));
-    }
-    if (state.loginType == LoginType.phone) {
-      emit(const LoginState().copyWith(loginType: LoginType.email));
+      emit(const LoginState(
+          loginType: LoginType.phone,
+          loginStatus: LoginStatus.initial,
+          result: ''));
+    } else {
+      emit(const LoginState(
+          loginType: LoginType.email,
+          loginStatus: LoginStatus.initial,
+          result: ''));
     }
   }
 }

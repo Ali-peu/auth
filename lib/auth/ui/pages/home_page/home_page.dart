@@ -1,3 +1,6 @@
+import 'package:auth/auth/ui/widgets/custom_container.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class HomePageProvider extends StatelessWidget {
@@ -15,7 +18,16 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.amber,
+      color: Colors.white,
+      child: Center(
+        child: CustomContainer(
+            child: TextButton(
+          child: Text('Log Out'),
+          onPressed: () {
+            FirebaseAuth.instance.signOut();
+          },
+        )),
+      ),
     );
   }
 }

@@ -13,6 +13,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       String result =
           await AuthenticationData().login(event.email, event.password);
       if (result == 'Success') {
+        // Указание на эту проблему в authentithication_data.dart
         emit(LoginState(loginStatus: LoginStatus.success, result: result));
       } else {
         emit(LoginState(loginStatus: LoginStatus.failure, result: result));
@@ -24,6 +25,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       String result = await AuthenticationData().signInWithGoogle();
 
       if (result == 'Success') {
+        // Указание на эту проблему в authentithication_data.dart
         emit(LoginState(loginStatus: LoginStatus.success, result: result));
       } else {
         emit(LoginState(loginStatus: LoginStatus.failure, result: result));

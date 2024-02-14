@@ -29,6 +29,8 @@ class AuthPage extends StatelessWidget {
       builder: (context, state) {
         return SingleChildScrollView(
           child: Column(children: [
+            // Переделай в tabs от RouteMaster не самая хорошая реализация больших экранов таким образом
+            // И плюсом избавишься от лишнего блока.
             (state.pageStatus == PageStatus.login)
                 ? BlocProvider(
                     create: (context) => LoginBloc(),

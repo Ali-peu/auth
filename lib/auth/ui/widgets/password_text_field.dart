@@ -61,7 +61,8 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
             }
           });
         },
-        icon: Icon(iconOpenPassword),
+        icon: Icon(
+            iconOpenPassword), // вот тут можно было обойтись тернарным, не вынося иконку в свойства
       ),
     );
   }

@@ -11,12 +11,12 @@ class AuthenticationData {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email.trim(), password: password.trim());
-      return 'Success';
+      return 'Success'; // Не используй так строки, однажды опечатаешься и будешь очень долго дебажить. Передавай объект и коды состояния, для примера глянь как сделано в примерах https://github.com/felangel/bloc/blob/master/examples/flutter_firebase_login/packages/authentication_repository/lib/src/authentication_repository.dart
     } on FirebaseAuthException catch (exceptions) {
       dev.log(exceptions.toString());
 
       return exceptions.toString();
-    }
+    } // Добавь обычный catch в том числе, на слушай сторонних ошибок. Например сетевых.
   }
 
   Future<MyUser> signUp(MyUser myUser, String password) async {
@@ -57,7 +57,7 @@ class AuthenticationData {
         );
 
         await _auth.signInWithCredential(credential);
-        
+
         result = 'Success';
         return result;
       }

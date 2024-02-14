@@ -12,7 +12,7 @@ class SignBloc extends Bloc<SignEvent, SignState> {
   SignBloc() : super(const SignState(signStatus: SignStatus.initial)) {
     on<SignButtonPressed>((event, emit) async {
       emit(const SignState(signStatus: SignStatus.loading));
-      MyUser createMyUser = MyUser.empty;
+      MyUser createMyUser = MyUser.empty; // Что тут происходит? 
       createMyUser = MyUser(
           userId: 'xxx', // TODO check
 
@@ -25,7 +25,7 @@ class SignBloc extends Bloc<SignEvent, SignState> {
       if (myUserFromFirebase != MyUser.empty) {
         String result =
             await FirebaseUserSettings().createUser(myUserFromFirebase);
-        if (result == 'Success') {
+        if (result == 'Success') { // Указание на эту проблему в authentithication_data.dart
           emit(SignState(signStatus: SignStatus.success, result: result));
         } else {
           emit(SignState(signStatus: SignStatus.success, result: result));

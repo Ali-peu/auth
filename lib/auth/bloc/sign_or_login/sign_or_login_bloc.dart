@@ -7,12 +7,12 @@ part 'sign_or_login_event.dart';
 part 'sign_or_login_state.dart';
 
 class SignOrLoginBloc extends Bloc<SignOrLoginEvent, SignOrLoginState> {
-  SignOrLoginBloc() : super(SignOrLoginState(pageStatus: PageStatus.login)) {
+  SignOrLoginBloc() : super(const SignOrLoginState(pageStatus: PageStatus.login)) {
     on<ChangePageEvent>((event, emit) {
       if (state.pageStatus == PageStatus.login) {
-        emit(SignOrLoginState(pageStatus: PageStatus.sign));
+        emit(const SignOrLoginState(pageStatus: PageStatus.sign));
       } else {
-        emit(SignOrLoginState(pageStatus: PageStatus.login));
+        emit(const SignOrLoginState(pageStatus: PageStatus.login));
       }
     });
   }

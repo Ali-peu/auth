@@ -10,30 +10,33 @@ part 'sign_state.dart';
 
 class SignBloc extends Bloc<SignEvent, SignState> {
   SignBloc() : super(const SignState(signStatus: SignStatus.initial)) {
-    on<SignButtonPressed>((event, emit) async {
-      emit(const SignState(signStatus: SignStatus.loading));
-      MyUser createMyUser = MyUser.empty; // Что тут происходит? 
-      createMyUser = MyUser(
-          userId: 'xxx', // TODO check
+    on<SignButtonPressed>(
+        (event, emit) async => await _onSignButtonPressed(emit, event));
+  }
 
-          email: event.email,
-          phoneNumber: Validator().clearPhoneNumber(event.phoneNumber),
-          name: event.userName);
+  Future<void> _onSignButtonPressed(
+      Emitter<SignState> emit, SignButtonPressed event) async {
+    emit(const SignState(signStatus: SignStatus.loading));
+    // Что тут происходит?
+    MyUser createMyUser = MyUser(
+        userId: 'xxx', // TODO check
+        email: event.email,
+        phoneNumber: Validator().clearPhoneNumber(event.phoneNumber),
+        name: event.userName);
 
-      MyUser myUserFromFirebase =
-          await AuthenticationData().signUp(createMyUser, event.password);
-      if (myUserFromFirebase != MyUser.empty) {
-        String result =
-            await FirebaseUserSettings().createUser(myUserFromFirebase);
-        if (result == 'Success') { // Указание на эту проблему в authentithication_data.dart
-          emit(SignState(signStatus: SignStatus.success, result: result));
-        } else {
-          emit(SignState(signStatus: SignStatus.success, result: result));
-        }
-      } else {
+    try {
+      MyUser myUserFromFirebase = await AuthenticationData().signUp(
+          createMyUser, event.password); // Тут я регистрирую пользователя
+      try {
+        await FirebaseUserSettings().createUser(
+            myUserFromFirebase); // Тут проиходит создание документа пользователя в Firestore Firebase
+        emit(const SignState(signStatus: SignStatus.success, result: ''));
+      } catch (error) {
         emit(SignState(
-            signStatus: SignStatus.failure, result: myUserFromFirebase.name));
+            signStatus: SignStatus.failure, result: error.toString()));
       }
-    });
+    } catch (error) {
+      emit(SignState(signStatus: SignStatus.failure, result: error.toString()));
+    }
   }
 }

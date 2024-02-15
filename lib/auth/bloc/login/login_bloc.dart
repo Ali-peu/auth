@@ -8,28 +8,39 @@ part 'login_state.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc()
       : super(const LoginState(loginStatus: LoginStatus.initial, result: '')) {
-    on<LoginButtonPressed>((event, emit) async {
-      emit(const LoginState(loginStatus: LoginStatus.loading));
-      String result =
-          await AuthenticationData().login(event.email, event.password);
-      if (result == 'Success') {
-        // Указание на эту проблему в authentithication_data.dart
-        emit(LoginState(loginStatus: LoginStatus.success, result: result));
-      } else {
-        emit(LoginState(loginStatus: LoginStatus.failure, result: result));
-      }
-    });
+    on<LoginButtonPressed>(
+        (event, emit) async => await _onLoginButtonPressed(emit, event));
 
-    on<GoogleSingInPressed>((event, emit) async {
+    on<GoogleSingInPressed>(
+        (event, emit) async => await _onGoogleSignOnPressed(emit));
+  }
+
+  Future<void> _onLoginButtonPressed(
+      Emitter<LoginState> emit, LoginButtonPressed event) async {
+    emit(const LoginState(loginStatus: LoginStatus.loading));
+
+    try {
+      await AuthenticationData().login(event.email, event.password);
+      emit(const LoginState(loginStatus: LoginStatus.success, result: ''));
+    } catch (error) {
+      emit(LoginState(
+          loginStatus: LoginStatus.failure, result: error.toString()));
+    }
+  }
+
+  Future<void> _onGoogleSignOnPressed(Emitter<LoginState> emit) async {
+    {
       emit(const LoginState().copyWith(loginStatus: LoginStatus.loading));
-      String result = await AuthenticationData().signInWithGoogle();
 
-      if (result == 'Success') {
-        // Указание на эту проблему в authentithication_data.dart
-        emit(LoginState(loginStatus: LoginStatus.success, result: result));
-      } else {
-        emit(LoginState(loginStatus: LoginStatus.failure, result: result));
+      try {
+        await AuthenticationData().signInWithGoogle();
+        emit(const LoginState(loginStatus: LoginStatus.success, result: ''));
+      } catch (error) {
+        emit(LoginState(
+            loginStatus: LoginStatus.failure,
+            result: error
+                .toString())); // TODO Нужен toast для уведомдение пользователя
       }
-    });
+    }
   }
 }

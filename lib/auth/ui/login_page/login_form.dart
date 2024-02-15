@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:routemaster/routemaster.dart';
 
+// Всё теже коментарии что в sign_form.dart
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
 

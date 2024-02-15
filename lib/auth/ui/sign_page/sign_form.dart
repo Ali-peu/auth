@@ -31,6 +31,7 @@ class _SignFormState extends State<SignForm> {
       builder: (context, state) {
         return BlocListener<SignBloc, SignState>(
           listener: (context, state) {
+            // вынеси функцию отдельно
             if (state.signStatus == SignStatus.success) {
               Routemaster.of(context).push('/home');
             }
@@ -71,6 +72,7 @@ class _SignFormState extends State<SignForm> {
         onPressed: () {
           if (formKey.currentState!.validate()) {
             log('Sign in process');
+            // Не увлекайся так тернарными операторами и проверка что идёт загрука должна быть выше
             state.signStatus != SignStatus.loading
                 ? context.read<SignBloc>().add(SignButtonPressed(
                     userName: nameController.text,
@@ -87,6 +89,7 @@ class _SignFormState extends State<SignForm> {
             : const Text('Sign'));
   }
 
+  // DRY! Что в логин пейдже, вынеси в именные конструкторы и параметры
   CommontTextField nameTextField() {
     return CommontTextField(
       controller: nameController,

@@ -4,43 +4,42 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'dart:developer';
 
-import 'package:firebase_core/firebase_core.dart';
-
 class FirebaseUserSettings {
   final usersCollection = FirebaseFirestore.instance.collection('user');
 
-  Future<String> createUser(MyUser myUser) async {
+  Future<void> createUser(MyUser myUser) async {
     try {
       log(myUser.email, name: "FirebaseUserSettings user email: ");
       await usersCollection.doc(myUser.email.trim()).set(myUser.toDocument());
-      return "Success";
-    } on FirebaseAuthException catch (authException) {
-      log(authException.toString());
-      return authException.toString();
+    } on FirebaseException catch (firebaseException) {
+      log(firebaseException.toString(),
+          name: 'FirebaseUserSettings createUser FirebaseException');
+      throw firebaseException.code;
+    } catch (error) {
+      log(error.toString(), name: 'FirebaseUserSettings createUser error');
+      throw error.toString();
     }
   }
 
   Future<void> updateFirebaseUserDocument(String email, String name) async {
     log(email, name: 'FirebaseUser EMAIL:');
-
     await usersCollection.doc(email).update({'fullName': name});
   }
-  
+
   Future<Map<String, dynamic>> getUserInfo() async {
     String email = FirebaseAuth.instance.currentUser!.email!;
-
     try {
       DocumentSnapshot<Map<String, dynamic>> docSnapshot =
           await usersCollection.doc(email).get();
-
       return docSnapshot.data()!;
-    } on FirebaseException catch (e) {
-      log(e.toString());
-      print('FirebaseErrors on get ref_key:$e');
-      return {'FirebaseErrors': e};
-    } catch (e) {
-      print('Errors on get ref_key: $e');
-      return {'DartError': e};
+    } on FirebaseException catch (firebaseException) {
+      log(firebaseException.code,
+          name: 'FirebaseExceptions on getUserInfo FirebaseUserSettings');
+      throw firebaseException.code;
+    } catch (error) {
+      log(error.toString(),
+          name: 'Exceptions on getUserInfo FirebaseUserSettings');
+      throw error.toString();
     }
   }
 }

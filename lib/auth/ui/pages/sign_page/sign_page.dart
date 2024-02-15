@@ -7,20 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:routemaster/routemaster.dart';
 
-class SignPageProvider extends StatelessWidget {
-  const SignPageProvider({Key? key}) : super(key: key);
+class SignPage extends StatelessWidget {
+  const SignPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => SignBloc(),
-      child: const SignPage(),
+      child: const SignPageScaffold(),
     );
   }
 }
 
-class SignPage extends StatelessWidget {
-  const SignPage({Key? key}) : super(key: key);
+class SignPageScaffold extends StatelessWidget {
+  const SignPageScaffold({super.key});
 
   @override
   Widget build(BuildContext context) {

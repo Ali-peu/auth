@@ -27,7 +27,7 @@ class _ForgotPassswordPageState extends State<ForgotPassswordPage> {
               onPressed: () {
                 //TODO
                 log('We are here do something',
-                    name: "ForgotPassswordPage ElevatedButton");
+                    name: 'ForgotPassswordPage ElevatedButton');
               },
               child: const Text('Далее'))
         ],

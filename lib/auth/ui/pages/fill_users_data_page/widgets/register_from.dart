@@ -2,6 +2,7 @@ import 'package:auth/auth/bloc/sign/sign_bloc.dart';
 import 'package:auth/auth/ui/widgets/custom_text_field.dart';
 import 'package:auth/auth/ui/widgets/custom_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:routemaster/routemaster.dart';
 
@@ -34,10 +35,10 @@ class _RegisterFromState extends State<RegisterFrom> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  nameTextField(),
-                  something1TextField(),
-                  something2TextField(),
-                  something3TextField(),
+                  simpleText(),
+                  simpleText1(),
+                  simpleText2(),
+                  simpleText3(),
                   signElevatedButton(),
                   CustomContainer(
                       child: ElevatedButton(
@@ -84,67 +85,59 @@ class _RegisterFromState extends State<RegisterFrom> {
     ));
   }
 
-  CustomTextField something1TextField() {
-    return CustomTextField(
-      controller: someThingController1,
-      hintText: 'Something1',
-      obscureText: false,
-      keyboardType: TextInputType.name,
-      prefixIcon: const Icon(Icons.person),
-      validator: (val) {
-        if (val!.isEmpty) {
-          return 'Empty';
-        }
-        return null;
-      },
-    );
-  }
-
-  CustomTextField something2TextField() {
-    return CustomTextField(
-      controller: someThingController2,
-      hintText: 'Something2',
-      obscureText: false,
-      keyboardType: TextInputType.name,
-      prefixIcon: const Icon(Icons.person),
-      validator: (val) {
-        if (val!.isEmpty) {
-          return 'Empty';
-        }
-        return null;
-      },
-    );
-  }
-
-  CustomTextField something3TextField() {
-    return CustomTextField(
-      controller: someThingController3,
-      hintText: 'Something3',
-      obscureText: false,
-      keyboardType: TextInputType.name,
-      prefixIcon: const Icon(Icons.person),
-      validator: (val) {
-        if (val!.isEmpty) {
-          return 'Empty';
-        }
-        return null;
-      },
-    );
-  }
-
-  CustomTextField nameTextField() {
-    return CustomTextField(
+ CustomTextField simpleText3() {
+    return CustomTextField.simpleText(
       controller: nameController,
-      hintText: 'Name',
-      obscureText: false,
-      keyboardType: TextInputType.name,
-      prefixIcon: const Icon(Icons.person),
       validator: (val) {
         if (val!.isEmpty) {
           return 'Empty';
         }
         return null;
       },
+      suffixIcon: const SizedBox(),
+      textInputFormatter: const [],
+    );
+  }
+
+  CustomTextField simpleText2() {
+    return CustomTextField.simpleText(
+      controller: nameController,
+      validator: (val) {
+        if (val!.isEmpty) {
+          return 'Empty';
+        }
+        return null;
+      },
+      suffixIcon: const SizedBox(),
+      textInputFormatter: const [],
+    );
+  }
+
+ CustomTextField simpleText1() {
+    return CustomTextField.simpleText(
+      controller: nameController,
+      validator: (val) {
+        if (val!.isEmpty) {
+          return 'Empty';
+        }
+        return null;
+      },
+      suffixIcon: const SizedBox(),
+      textInputFormatter: const [],
+    );
+  }
+
+  CustomTextField simpleText() {
+    return CustomTextField.simpleText(
+      controller: nameController,
+      validator: (val) {
+        if (val!.isEmpty) {
+          return 'Empty';
+        }
+        return null;
+      },
+      suffixIcon: const SizedBox(),
+      textInputFormatter: const [],
     );
   }
 }

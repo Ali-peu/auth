@@ -1,3 +1,4 @@
+import 'package:auth/auth/data/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -7,49 +8,65 @@ class CustomTextField extends StatelessWidget {
   final bool obscureText;
   final TextInputType keyboardType;
   final Widget? suffixIcon;
-  final VoidCallback? onTap;
   final Widget? prefixIcon;
   final String? Function(String?)? validator;
-  final TextInputFormatter? textInputFormatter;
-  final FocusNode? focusNode;
-  final String? errorMsg;
-  // final TextInputFormatter? inputFormatter;
-  final String? Function(String?)? onChanged;
+  final List<TextInputFormatter>? textInputFormatter;
+
+  const CustomTextField.simpleText(
+      {required this.suffixIcon,
+      required this.textInputFormatter,
+      required this.controller,
+      required this.validator,
+      super.key})
+      : hintText = 'Name',
+        obscureText = false,
+        keyboardType = TextInputType.name,
+        prefixIcon = const Icon(Icons.person);
+
+  const CustomTextField.emailTextField(
+      {required this.suffixIcon,
+      required this.textInputFormatter,
+      required this.controller,
+      required this.validator,
+      super.key})
+      : hintText = 'Email',
+        obscureText = false,
+        keyboardType = TextInputType.emailAddress,
+        prefixIcon = const Icon(Icons.alternate_email);
+
+  CustomTextField.phoneNumberTextField(
+      {required this.suffixIcon,
+      required this.controller,
+      required this.validator,
+      super.key})
+      : hintText = '+7 (###) ###-##-##',
+        prefixIcon = const Icon(Icons.call),
+        obscureText = false,
+        keyboardType = TextInputType.phone,
+        textInputFormatter = [Validator().maskFormatter];
 
   const CustomTextField(
-      {super.key,
-      required this.controller,
+      {required this.controller,
       required this.hintText,
       required this.obscureText,
       required this.keyboardType,
+      super.key,
       this.suffixIcon,
-      this.onTap,
       this.prefixIcon,
       this.validator,
-      this.focusNode,
-      this.errorMsg,
-      this.onChanged,
       this.textInputFormatter});
 
   @override
   Widget build(BuildContext context) {
-    List<TextInputFormatter> inputFormatters = [];
-
-    if (keyboardType == TextInputType.phone && textInputFormatter != null) {
-      inputFormatters.add(textInputFormatter!);
-    }
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8),
       child: TextFormField(
         validator: validator,
         controller: controller,
         obscureText: obscureText,
         keyboardType: keyboardType,
-        focusNode: focusNode,
-        onTap: onTap,
         textInputAction: TextInputAction.next,
-        onChanged: onChanged,
-        inputFormatters: inputFormatters,
+        inputFormatters: textInputFormatter,
         decoration: InputDecoration(
           suffixIcon: suffixIcon,
           prefixIcon: prefixIcon,
@@ -66,7 +83,6 @@ class CustomTextField extends StatelessWidget {
           filled: true,
           hintText: hintText,
           hintStyle: TextStyle(color: Colors.grey[500]),
-          errorText: errorMsg,
         ),
       ),
     );

@@ -24,7 +24,7 @@ class RegistrationButtonWithPlatform extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    "Продолжить в ",
+                    'Продолжить в ',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.normal,

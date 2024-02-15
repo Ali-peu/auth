@@ -16,7 +16,7 @@ class Validator {
   String clearPhoneNumber(String number) {
     String rightNumber =
         '8${number.substring(1, 2)}${number.substring(4, 7)}${number.substring(9, 12)}${number.substring(13, 15)}${number.substring(17)}';
-    print(rightNumber);
+
     return rightNumber;
   }
 
@@ -24,9 +24,8 @@ class Validator {
     if (phoneNumber == null || phoneNumber.isEmpty) {
       return false;
     } else {
-      String number = clearPhoneNumber(phoneNumber);
-      print(number);
-      print(number.length);
+      final number = clearPhoneNumber(phoneNumber);
+
       if (number.length != 11) {
         return false;
       } else {
@@ -35,7 +34,7 @@ class Validator {
     }
   }
 
-  var maskFormatter = MaskTextInputFormatter(
+  MaskTextInputFormatter maskFormatter = MaskTextInputFormatter(
       mask: '+7 (###) ###-##-##',
       filter: {'#': RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.eager);

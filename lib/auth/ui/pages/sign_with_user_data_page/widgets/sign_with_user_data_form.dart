@@ -1,5 +1,4 @@
 import 'package:auth/auth/bloc/sign/sign_bloc.dart';
-import 'package:auth/auth/data/validator.dart';
 import 'package:auth/auth/ui/widgets/custom_container.dart';
 import 'package:auth/auth/ui/widgets/custom_text_field.dart';
 import 'package:auth/auth/ui/widgets/password_text_field.dart';
@@ -22,40 +21,43 @@ class _SignWithUserDataFormState extends State<SignWithUserDataForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: BlocBuilder<SignBloc, SignState>(
-      builder: (context, state) {
-        return Form(
-          key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              rowAboveTheFields(state, context),
-              if (state.signType == SignType.email) emailTextField(),
-              if (state.signType == SignType.phoneNumber)
-                phoneNumberTextField(),
-              firstPasswordTextField(),
-              secondPasswordTextField(),
-              CustomContainer(
-                child: TextButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        state.signStatus != SignStatus.loading
-                            ? context.read<SignBloc>().add(SignButtonPressed(
-                                password: passwordController.text,
-                                signEmail: signController.text))
-                            : null;
-                        Routemaster.of(context)
-                            .push('/fill_users_data/${signController.text}');
-                      }
-                    },
-                    child: state.signStatus != SignStatus.loading
-                        ? const Text('Далее')
-                        : const CircularProgressIndicator()),
-              )
-            ],
-          ),
-        );
+    return Scaffold(
+        body: BlocListener<SignBloc, SignState>(
+      listener: (context, state) {
+        if (state.signStatus == SignStatus.success) {
+          Routemaster.of(context)
+              .push('/fill_users_data/${signController.text}');
+        }
       },
+      child: BlocBuilder<SignBloc, SignState>(
+        builder: (context, state) {
+          return Form(
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                rowAboveTheFields(state, context),
+                if (state.signType == SignType.email) emailTextField(),
+                if (state.signType == SignType.phoneNumber)
+                  phoneNumberTextField(),
+                firstPasswordTextField(),
+                secondPasswordTextField(),
+                CustomContainer(
+                  child: TextButton(
+                      onPressed: () => formKey.currentState!.validate()
+                          ? context.read<SignBloc>().add(SignButtonPressed(
+                              password: passwordController.text,
+                              signEmail: signController.text))
+                          : () {},
+                      child: state.signStatus != SignStatus.loading
+                          ? const Text('Далее')
+                          : const CircularProgressIndicator()),
+                )
+              ],
+            ),
+          );
+        },
+      ),
     ));
   }
 
@@ -105,34 +107,29 @@ class _SignWithUserDataFormState extends State<SignWithUserDataForm> {
   }
 
   Widget phoneNumberTextField() {
-    return CustomTextField(
-        controller: signController,
-        textInputFormatter: Validator().maskFormatter,
-        hintText: '+7 (###) ###-##-##',
-        prefixIcon: const Icon(Icons.call),
-        obscureText: false,
-        keyboardType: TextInputType.phone,
-        validator: (val) {
-          if (val!.isEmpty) {
-            return "Empty";
-          }
-          return null;
-        });
-  }
-
-  CustomTextField emailTextField() {
-    return CustomTextField(
+    return CustomTextField.phoneNumberTextField(
       controller: signController,
-      hintText: 'Email',
-      obscureText: false,
-      keyboardType: TextInputType.emailAddress,
-      prefixIcon: const Icon(Icons.alternate_email),
       validator: (val) {
         if (val!.isEmpty) {
           return 'Empty';
         }
         return null;
       },
+      suffixIcon: const SizedBox(),
+    );
+  }
+
+  Widget emailTextField() {
+    return CustomTextField.emailTextField(
+      controller: signController,
+      validator: (val) {
+        if (val!.isEmpty) {
+          return 'Empty';
+        }
+        return null;
+      },
+      suffixIcon: const SizedBox(),
+      textInputFormatter: const [],
     );
   }
 }

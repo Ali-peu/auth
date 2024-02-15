@@ -9,13 +9,9 @@ part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc()
-      : super(const LoginState(
-          loginStatus: LoginStatus.initial,
-        )) {
-    on<LoginButtonPressed>((event, emit) async {
-      await _loginButtonPressed(emit, event);
-    });
+  LoginBloc() : super(const LoginState()) {
+    on<LoginButtonPressed>(
+        (event, emit) async => await _loginButtonPressed(emit, event));
     on<CheckThisIsNewUser>(
         (event, emit) async => await _checkThisIsNewUser(emit));
 
@@ -30,29 +26,31 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Future<void> _checkThisIsNewUser(Emitter<LoginState> emit) async {
-    Map<String, dynamic> docSnapshot =
-        await FirebaseUserSettings().getUserInfo();
-    String currentUserName = docSnapshot['fullName'];
-    String currentUserEmail = docSnapshot['email'];
-    if (currentUserName.isEmpty) {
+    var currentUserEmail = '';
+    try {
+      final docSnapshot = await FirebaseUserSettings().getUserInfo();
+      currentUserEmail = docSnapshot['email'] as String;
+      emit(const LoginState(
+          loginStatus: LoginStatus.success, result: 'Success'));
+    } on Exception catch (error) {
+      log(error.toString(), name: 'Errors _checkThisIsNewUser from LoginBloc');
       emit(LoginState(
           loginStatus: LoginStatus.success,
           result: currentUserEmail,
           newUser: true));
-    } else {
-      emit(const LoginState(
-          loginStatus: LoginStatus.success, result: 'Success'));
     }
   }
 
   Future<void> _onLoginWithEmail(
       LoginWithEmail event, Emitter<LoginState> emit) async {
-    String result =
-        await AuthenticationData().login(event.email, event.password);
-    if (result == 'Success') {
-      add(CheckThisIsNewUser());
-    } else {
-      emit(LoginState(loginStatus: LoginStatus.failure, result: result));
+    emit(const LoginState(loginStatus: LoginStatus.loading));
+
+    try {
+      await AuthenticationData().login(event.email, event.password);
+      emit(const LoginState(loginStatus: LoginStatus.success));
+    } catch (error) {
+      emit(LoginState(
+          loginStatus: LoginStatus.failure, result: error.toString()));
     }
   }
 
@@ -65,13 +63,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   Future<void> _googleSignButtonPressed(Emitter<LoginState> emit) async {
     emit(const LoginState().copyWith(loginStatus: LoginStatus.loading));
-    String result = await AuthenticationData().signInWithGoogle();
 
-    if (result == 'Success' || result.contains('@')) {
-      // TODO
-      add(CheckThisIsNewUser());
-    } else {
-      emit(LoginState(loginStatus: LoginStatus.failure, result: result));
+    try {
+      await AuthenticationData().signInWithGoogle();
+      emit(const LoginState(loginStatus: LoginStatus.success));
+    } catch (error) {
+      emit(LoginState(
+          loginStatus: LoginStatus.failure,
+          result: error
+              .toString())); // TODO Нужен toast для уведомдение пользователя
     }
   }
 
@@ -90,15 +90,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Future<void> _onChangeLoginType(
       ChangeLoginType event, Emitter<LoginState> emit) async {
     if (state.loginType == LoginType.email) {
-      emit(const LoginState(
-          loginType: LoginType.phone,
-          loginStatus: LoginStatus.initial,
-          result: ''));
+      emit(const LoginState(loginType: LoginType.phone));
     } else {
-      emit(const LoginState(
-          loginType: LoginType.email,
-          loginStatus: LoginStatus.initial,
-          result: ''));
+      emit(const LoginState());
     }
   }
 }

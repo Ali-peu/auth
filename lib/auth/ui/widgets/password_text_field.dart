@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:auth/auth/ui/widgets/custom_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +19,6 @@ class PasswordTextField extends StatefulWidget {
 }
 
 class _PasswordTextFieldState extends State<PasswordTextField> {
-  String? _errorMsg;
   bool obscurePassword = true;
   IconData iconOpenPassword = CupertinoIcons.lock_circle_fill;
 
@@ -33,7 +30,6 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
       obscureText: obscurePassword,
       keyboardType: TextInputType.visiblePassword,
       prefixIcon: const Icon(Icons.lock),
-      errorMsg: _errorMsg,
       validator: (val) {
         if (val!.isEmpty) {
           return 'Empty';

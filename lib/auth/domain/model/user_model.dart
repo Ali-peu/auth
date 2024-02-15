@@ -29,12 +29,12 @@ class MyUser extends Equatable {
     name: '',
   );
 
-  static MyUser fromDocument(Map<String, dynamic> doc) {
+  MyUser fromDocument(Map<String, dynamic> doc) {
     return MyUser(
-      userId: doc['userId'],
-      email: doc['email'],
-      phoneNumber: doc['phoneNumber'],
-      name: doc['fullName'],
+      userId: doc['userId'] as String,
+      email: doc['email'] as String,
+      phoneNumber: doc['phoneNumber'] as String,
+      name: doc['fullName'] as String,
     );
   }
 

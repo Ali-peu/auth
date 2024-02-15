@@ -1,12 +1,10 @@
 import 'dart:developer';
 
 import 'package:auth/auth/bloc/login/login_bloc.dart';
-import 'package:auth/auth/data/validator.dart';
-import 'package:auth/auth/ui/widgets/custom_text_field.dart';
 import 'package:auth/auth/ui/widgets/custom_divider.dart';
+import 'package:auth/auth/ui/widgets/custom_text_field.dart';
 import 'package:auth/auth/ui/widgets/password_text_field.dart';
 import 'package:auth/auth/ui/widgets/registration_button_with_platform.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:routemaster/routemaster.dart';
@@ -118,15 +116,13 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
 
   ElevatedButton loginButton(LoginState state, BuildContext context) {
     return ElevatedButton(
-        onPressed: () {
-          if (formKey.currentState!.validate()) {
-            state.loginStatus == LoginStatus.loading
-                ? null
+        onPressed: () => formKey.currentState!.validate()
+            ? (state.loginStatus == LoginStatus.loading
+                ? () {}
                 : context.read<LoginBloc>().add(LoginButtonPressed(
                     email: loginController.text,
-                    password: passwordController.text));
-          }
-        },
+                    password: passwordController.text)))
+            : () {},
         child: state.loginStatus == LoginStatus.loading
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -166,35 +162,30 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
     }
   }
 
-  CustomTextField emailTextField() {
-    return CustomTextField(
+  Widget phoneNumberTextField() {
+    return CustomTextField.phoneNumberTextField(
       controller: loginController,
-      hintText: 'Email',
-      obscureText: false,
-      keyboardType: TextInputType.emailAddress,
-      suffixIcon: const Icon(Icons.phone),
-      validator: (value) {
-        if (value!.isEmpty) {
+      validator: (val) {
+        if (val!.isEmpty) {
           return 'Empty';
         }
         return null;
       },
+      suffixIcon: const SizedBox(),
     );
   }
 
-  Widget phoneNumberTextField() {
-    return CustomTextField(
-        controller: loginController,
-        textInputFormatter: Validator().maskFormatter,
-        hintText: '+7 (###) ###-##-##',
-        prefixIcon: const Icon(Icons.call),
-        obscureText: false,
-        keyboardType: TextInputType.phone,
-        validator: (val) {
-          if (val!.isEmpty) {
-            return "Empty";
-          }
-          return null;
-        });
+  Widget emailTextField() {
+    return CustomTextField.emailTextField(
+      controller: loginController,
+      validator: (val) {
+        if (val!.isEmpty) {
+          return 'Empty';
+        }
+        return null;
+      },
+      suffixIcon: const SizedBox(),
+      textInputFormatter: const [],
+    );
   }
 }
